@@ -1,0 +1,24 @@
+{
+  "name": "subscription-as-a-service",
+  "version": "1.0.0",
+  "description": "API to add user and its plan subscriptions.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "inspect": "nodemon --inspect app.js"
+ ,   "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spsp008/subscription-as-a-service.git"
+  },
+  "author": "Shiv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spsp008/subscription-as-a-service/issues"
+  },
+  "homepage": "https://github.com/spsp008/subscription-as-a-service#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
