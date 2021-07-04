@@ -1,25 +1,53 @@
-const User = require('../models').User;
-
+const Models = require('../models');
+const User = Models.User;
+const { sequelize } = Models;
 const APP_CONSTANTS = require('../constants.js');
+const USER_CONSTANTS = APP_CONSTANTS.USER;
 
 const getAll = async (req, res) => {
-  const users = await User.findAll({
-    attributes: ['user_name', ['createdAt', 'created_at']],
-  });
-  res.send({ users });
+  return User.findAll({
+    attributes: [
+      'user_name',
+      [
+        sequelize.fn(
+          'to_char',
+          sequelize.col('createdAt'),
+          USER_CONSTANTS.RES_DATE_FORMAT
+        ),
+        'created_at',
+      ],
+    ],
+  })
+    .then((users) => res.status(200).send({ users }))
+    .catch((error) => res.status(500).send(APP_CONSTANTS.ERRORS.SOMETHING_WENT_WRONG));
 };
 
 const getByName = async (req, res) => {
   const { user_name } = req.params;
-  const user =  await User.findOne({
-    where: { user_name },
-    attributes: ['user_name', ['createdAt', 'created_at']],
-  })
+  try {
+    const user = await User.findOne({
+      where: { user_name },
+      attributes: [
+        'user_name',
+        [
+          sequelize.fn(
+            'to_char',
+            sequelize.col('createdAt'),
+            USER_CONSTANTS.RES_DATE_FORMAT
+          ),
+          'created_at',
+        ],
+      ],
+    });
 
-  if (user) {
-    return res.status(200).send(user);
+    if (user) {
+      return res.status(200).send(user);
+    }
+    return res.status(404).send(APP_CONSTANTS.ERRORS.NOT_FOUND);
+  } catch (err) {
+    return res.status(500).send(APP_CONSTANTS.ERRORS.SOMETHING_WENT_WRONG);
   }
-  return res.status(404).send(APP_CONSTANTS.ERRORS.NOT_FOUND)
+
 };
 
 const create = (req, res) => {
@@ -28,7 +56,7 @@ const create = (req, res) => {
     user_name,
   })
     .then((user) => res.sendStatus(200))
-    .catch((error) => res.status(400).send(error));
+    .catch((error) => res.status(500).send(APP_CONSTANTS.ERRORS.SOMETHING_WENT_WRONG));
 };
 
 module.exports = {

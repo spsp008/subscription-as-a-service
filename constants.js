@@ -1,7 +1,7 @@
 const APP_CONSTANTS = {
   REQ_DATE_FORMAT: 'YYYY-MM-DD',
   USER: {
-    RES_DATE_FORMAT: 'YYYY-MM-DD HH:mm:ss',
+    RES_DATE_FORMAT: 'YYYY-MM-DD HH24:MI:SS',
     ERRORS: Object.freeze({
       INVALID: 'Invalid user.',
       CREATE: 'Unable to create user.',
@@ -9,6 +9,7 @@ const APP_CONSTANTS = {
     })
   },
   SUBSCRIPTION: {
+    RES_DATE_FORMAT: 'YYYY-MM-DD',
     ERRORS: Object.freeze({
       INVALID: 'Invalid subscription.',
       CREATE: 'Unable to create subscription.',
@@ -16,13 +17,15 @@ const APP_CONSTANTS = {
     })
   },
   PLAN: {
+    UNLIMITED: 'Unlimited',
     ERRORS: Object.freeze({
       INVALID: 'Invalid plan.'
     })
   },
   ERRORS: Object.freeze({
     INVALID_DATE: 'Invalid date.',
-    NOT_FOUND: 'Not found.'
+    NOT_FOUND: 'Not found.',
+    SOMETHING_WENT_WRONG: 'Something went wrong.'
   }),
   STATUS: Object.freeze({
     SUCCESS: 'SUCCESS',
