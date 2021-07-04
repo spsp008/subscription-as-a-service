@@ -1,6 +1,6 @@
 {
   "name": "subscription-as-a-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API to add user and its plan subscriptions.",
   "main": "app.js",
   "scripts": {
