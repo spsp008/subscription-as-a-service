@@ -73,9 +73,50 @@ app.post('/subscription', async (req, res) => {
     })
     .then(subscription => res.status(201).send({
       status: 'SUCCESS',
-      amount: (-1 * plan.cost).toFixed(2)
+      amount: (-1 * plan.cost).toFixed(1)
     }))
     .catch(error => res.status(400).send({status: 'FAILURE', message: error.message}));
+});
+
+app.get('/subscription/:user_name/:date', async (req, res) => {
+  const {user_name, date} = req.params;
+  if (date && user_name) {
+    const startDate = moment(date, 'YYYY-MM-DD', true);
+    if (!startDate.isValid()) {
+      return res.status(400).send({status: 'FAILURE', message: "Specified date is not valid"});
+    }
+    const subscription = await Subscription.findOne({where: {user_name, [Op.or]: [
+      {
+        valid_till: {
+          [Op.gte]: startDate
+        },
+      },
+      {
+        valid_till: {
+         [Op.eq]: null
+        }
+      },
+    ]}});
+    const {plan_id, valid_till} = subscription;
+    const diff = moment(valid_till).clone().diff(startDate, 'days');
+    const obj = {
+      plan_id,
+      days_left: diff
+    };
+    res.status(200).send(obj);
+  } else {
+    // TODO
+  }
+});
+
+app.get('/subscription/:user_name', async (req, res) => {
+  const {user_name} = req.params;
+  if (user_name) {
+    const subscriptions = await Subscription.findAll({where: {user_name}, attributes: ['plan_id', 'start_date', 'valid_till']});
+    res.status(200).send(subscriptions);
+  } else {
+    // TODO
+  }
 });
 
 app.listen(port, () => {
