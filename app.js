@@ -5,12 +5,16 @@ const dotenv = require('dotenv').config();
 const routes = require('./routes');
 
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 app.use(routes);
 
 app.listen(port, () => {
-  console.log(`SaaS app listening at ${port} in ${process.env.NODE_ENV} environment!`);
+  console.log(
+    `SaaS app listening at ${port} in ${process.env.NODE_ENV} environment!`
+  );
 });
