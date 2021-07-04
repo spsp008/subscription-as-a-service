@@ -28,18 +28,20 @@ NODE_ENV=local
 ```
 In the config folder create *environment.config.json* file e.g. `local.config.json` and add following values according to your database. First create a DB in postgres with name say `saas`. Dev and Test config files are already added. Example values below
 ```
-
-{
-  "username": "shiv",
-  "password": "password",
-  "database": "saas",
-  "host": "127.0.0.1",
-  "dialect": "postgres",
-  "port": 5432
-}
+  {
+    "username": "shiv",
+    "password": "password",
+    "database": "saas",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "port": 5432
+  }
 ```
 Then run migration and seeds respectively.
 Note: Sequelize cli must be installed before running this.
+```
+sequelize db:create // In case db is not already created
+```
 ```
 sequelize db:migrate
 ```
@@ -54,35 +56,41 @@ npm start
 ```
 
 ## Assumptions
-1. The `user_name` field in the **User** table will be unique.
-2. User can have many subscriptions active.
-2. If user has more than one active subscriptions, on calling below API
-```
-/subscription/:user_name/:date/
+1. There is no authentication in the APIs.
+2. There are no associations/relations among User, Plan and Subscription yet.
+3. The `user_name` field in the **User** table will be unique.
+4. User can have many subscriptions active.
+5. If user has more than one active subscriptions, on calling below API
 
 ```
+  GET /subscription/:user_name/:date/
+```
 the subscription which was active on the date and the latest will be returned.
-4. If plan is unlimited then in the response of user's subscription the `days_left` value will be `'Unlimited'`
+
+6. If plan is unlimited then in the response of user's subscription the `days_left` value will be `'Unlimited'`
 ```
 { "plan_id": "FREE", "days_left": "Unlimited" }
 ```
-and in the below API
+7. In the below API
 
 ```
-/subscription/:user_name/
+  GET /subscription/:user_name/
 ```
-5. For the case of unlimited plans the `valid_till` value will be `null`. The response will be like below.
+For the case of unlimited plans the `valid_till` value will be `null`. The response will be like below.
 
 ```
-[
-  {
-    "plan_id": "TRIAL",
-    "start_date": "2020-02-22", "valid_till": "2020-02-28"
-  },
-  {
-    "plan_id": "FREE",
-    "start_date": "2020-02-29", "valid_till": null
-  }
-]
+  [
+    {
+      "plan_id": "TRIAL",
+      "start_date": "2020-02-22",
+      "valid_till": "2020-02-28"
+    },
+    {
+      "plan_id": "FREE",
+      "start_date": "2020-02-29",
+      "valid_till": null
+    }
+  ]
 
 ```
+8. The date/time are in UTC format in all the responses.
